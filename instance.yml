@@ -5,7 +5,7 @@
     ami: ami-0220d79f3f480ecf5
     sg_id: sg-0d5cb8ef26a360d1a
     domain: krishnadev.space
-    action: create
+    actions: create
     env: dev
     instances:
     - mongodb
@@ -26,12 +26,12 @@
 
     loop: "{{ instances }}"
     register: ec2_output
-    when: action == "create"
+    when: actions == "create"
 
   - name: print ec2_output
     ansible.builtin.debug:
      msg: "{{ ec2_output }}"
-    when: action == "create" 
+    when: actions == "create" 
 
   - name: creating records
     amazon.aws.route53:
@@ -43,7 +43,7 @@
       value: "{{ item.instances[0].private_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"  
-    when: action == "create"
+    when: actions == "create"
 
   - name: creating records
     amazon.aws.route53:
@@ -57,7 +57,7 @@
     loop: "{{ ec2_output.results }}"    
     when: 
     - item.item == "frontend"
-    - action == "create"
+    - actions == "create"
 
   - name: delete frontend records
     amazon.aws.route53:
@@ -69,7 +69,7 @@
     loop: "{{ instances }}"    
     when: 
     - item == "frontend"
-    - action == "destroy"  
+    - actions == "destroy"  
 
   - name: delete r53 records
     amazon.aws.ec2_instance:
@@ -79,11 +79,11 @@
       type: A
       ttl: 1
     loop: "{{ instances }}"
-    when: action == "destroy"
+    when: actions == "destroy"
 
   - name : delete ec2_instance
     amazon.aws.ec2_instance:
       state: absent
       name: "{{ item }}-{{ env }}"
     loop: "{{ instances }}"
-    when: action == "destroy"
+    when: actions == "destroy"
