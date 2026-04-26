@@ -5,6 +5,7 @@
     ami: ami-0220d79f3f480ecf5
     sg_id: sg-0d5cb8ef26a360d1a
     domain: krishnadev.space
+    action: create
     env: dev
     instances:
     - mongodb
@@ -40,6 +41,7 @@
       value: "{{ item.instances[0].private_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"  
+    when: action == "create"
 
   - name: creating records
     amazon.aws.route53:
@@ -51,4 +53,23 @@
       value: "{{ item.instances[0].public_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"    
-    when: item.item == "frontend"
+    when: 
+    - item.item == "frontend"
+    - action == "create"
+
+  - name: delete r53 records
+    amazon.aws.ec2_instance:
+      state: absent
+      zone: "{{ domain }}"
+      record: "{{ item }}-{{ env }}.{{ domain }}"
+      type: A
+      ttl: 1
+    loop: "{{ instances }}"
+    when: action == "destroy"
+
+  - name : delete ec2_instance
+    amazon.aws.ec2_instance:
+      state: absent
+      name: "{{ item }}-{{ env }}"
+    loop: "{{ instances }}"
+    when: action == "destroy"
