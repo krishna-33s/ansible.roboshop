@@ -6,7 +6,7 @@
     sg_id: sg-0d5cb8ef26a360d1a
     domain: krishnadev.space
     env: dev
-    instance:
+    instances:
     - mongodb
     - catalogue
 
@@ -23,7 +23,7 @@
         Env: "{{ item }}"
         Name: "{{ item }}-{{ env }}"
 
-    loop: "{{ instance }}"
+    loop: "{{ instances }}"
     register: ec2_output
 
   - name: print ec2_output
@@ -37,7 +37,7 @@
       record: "{{ item.item }}-{{ env }}-{{ domain }}"
       type: A
       ttl: 1
-      value: "{{ item.instance[0].private_ip_address }}"
+      value: "{{ item.instances[0].private_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"  
 
@@ -48,7 +48,7 @@
       record: "roboshop-{{ env }}-{{ domain }}"
       type: A
       ttl: 1
-      value: "{{ item.instance[0].public_ip_address }}"
+      value: "{{ item.instances[0].public_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"    
     when: item.item == "frontend"
