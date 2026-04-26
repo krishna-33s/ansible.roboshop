@@ -26,10 +26,12 @@
 
     loop: "{{ instances }}"
     register: ec2_output
+    when: action == "create"
 
   - name: print ec2_output
     ansible.builtin.debug:
      msg: "{{ ec2_output }}"
+    when: action == "create" 
 
   - name: creating records
     amazon.aws.route53:
@@ -56,6 +58,18 @@
     when: 
     - item.item == "frontend"
     - action == "create"
+
+  - name: delete frontend records
+    amazon.aws.route53:
+      state: absent
+      zone: "{{ domain }}"
+      record: "roboshop-{{ env }}.{{ domain }}"
+      type: A
+      ttl: 1
+    loop: "{{ instances }}"    
+    when: 
+    - item == "frontend"
+    - action == "destroy"  
 
   - name: delete r53 records
     amazon.aws.ec2_instance:
