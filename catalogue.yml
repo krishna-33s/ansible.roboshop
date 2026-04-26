@@ -30,6 +30,6 @@
       dest: /tmp/catalogue.zip                
 
   - name: unarcchieve
-    ansible.buitin.unarchive:
+    ansible.builtin.unarchive:
       src: /tmp/catalogue.zip
       dest: /app    
