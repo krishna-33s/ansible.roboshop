@@ -1,4 +1,4 @@
-- name: ec2-instance user_creation
+- name: ec2instance and records
   hosts: all
   connection: local
   vars:
