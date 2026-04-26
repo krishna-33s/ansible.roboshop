@@ -13,14 +13,14 @@
   - name: instance creating
     amazon.aws.ec2_instance:
       image_id: "{{ ami }}"
-      security_group: "{{ sg_id }}"
+      secuirity_group: "{{ sg_id }}"
       instance_type: "t3.micro"
       name: "{{ item }}-{{ env }}"
       tags:
         Project: roboshop
-        component: "{{ item }}"
-        env: "{{ item }}"
-        name: "{{ item }}-{{ env }}"
+        Component: "{{ item }}"
+        Env: "{{ item }}"
+        Name: "{{ item }}-{{ env }}"
 
     loop: "{{ instance }}"
     register: ec2_output
