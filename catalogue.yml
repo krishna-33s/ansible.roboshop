@@ -20,7 +20,7 @@
       comment: "roboshop system user"
 
   - name: delete recent app file
-    ansible.buitin.file:
+    ansible.builtin.file:
       path: /app
       state: absent    
 
