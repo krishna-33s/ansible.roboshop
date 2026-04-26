@@ -72,7 +72,7 @@
     - actions == "destroy"  
 
   - name: delete r53 records
-    amazon.aws.ec2_instance:
+    amazon.aws.route53:
       state: absent
       zone: "{{ domain }}"
       record: "{{ item }}-{{ env }}.{{ domain }}"
