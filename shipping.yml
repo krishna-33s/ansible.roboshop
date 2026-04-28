@@ -78,9 +78,9 @@
     - /app/db/app-user.sql
     - /app/db/master-data.sql 
 
-- name: start service
-  ansible.builtin.service:
-    name: shipping
-    state: restarted
-    enabled: yes    
+  - name: start service
+    ansible.builtin.service:
+      name: shipping
+      state: restarted
+      enabled: yes    
   
