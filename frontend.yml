@@ -23,8 +23,8 @@
 
   - name: downloading
     ansible.builtin.get_url:
-    url: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
-    dest: /tmp/frontend.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+      dest: /tmp/frontend.zip
 
   - name: unarchive file
     ansible.builtin.unarchive:
